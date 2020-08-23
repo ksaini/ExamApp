@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8" />
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="msapplication-tap-highlight" content="no" />
+      <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+      <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+      <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+     
+      <script src="./js/jquery.min.js"></script>
+      <script src="./assets/js/bootstrap.min.js"></script>
+	   <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="css/index.css" />
+      <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+      <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+      <title>GreyBox Admin</title>
+      <style>
+		 body,html {
+			background-color: #e7eeef;
+			text-transform: none;
+		}
+		
+		@media  (min-width: 600px) {
+		.question {
+			width:60%;
+			}
+		}	
+		@media screen and (max-width: 600px) {
+			.container-fluid {
+				padding-right: 10px;
+				padding-left: 10px;
+			}
+			.navbar {
+				margin-bottom:20px;
+			}
+		}
+        .navbar-inverse{
+			background-color:#34495E;
+			color:white;
+		}
+		.main-panel {
+			background-color: #e7eeef ;
+		}
+		#info {
+			margin-top:-10px;
+			margin-bottom:8px;
+			float:right;
+			font-size:12px;
+			padding-right:20px;
+			font-family: 'open_sans','Open Sans',sans-serif;
+		}
+		.question {
+			
+			margin-top:10px;
+			padding-left:5px;
+			padding-top:20px;
+			background-color: #fff;
+			min-height:200px;
+			box-shadow: 0 6px 16px 0 rgba(0,0,0,.2);			
+		}
+		.options{
+			margin-top:25px;
+		}
+		
+		.qcont {
+			margin-left:10px;
+			margin-right:10px;
+			font-weight: 400;
+			font-family: 'open_sans','Open Sans',sans-serif;
+			font-size: 18px;
+			letter-spacing: 1.1px;
+		}
+		.optlbl {
+			letter-spacing: 1px;
+			font-weight: 400;
+			padding-left:5px;	
+			font-size: 16px;	
+		}
+		.opts {
+			margin-left:5px;
+			margin-right:5px;
+		}
+		
+		.btn {
+			margin-top:40px;
+			margin-botton:15px;
+			padding-left:15px;
+			padding-right:15px;
+			box-shadow: 0 4px 12px 0 rgba(var(--shadow-btn-primary,27,169,76),.5);
+			
+		}
+		.btn-default {
+			box-shadow: none;
+		}
+		.btn-right {
+			float: right;
+		}
+		.btn-left {
+			float: left;
+		}
+		.confirm {
+			display:none;
+			text-align:center;
+		}
+      </style>
+   </head>
+   <body >
+    <div class="main-panel">
+    <nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header"><a class="navbar-brand" href="#" style="color:white">GreyBox</a></div>
+			<ul class="nav navbar-nav">
+				<!----<li class="active"><a href="#">Home</a></li>--->
+				
+			</ul>
+		</div>
+	</nav>
+         <div class="content" >
+         <div class="container-fluid">
+		 <h3>Data Structures MCQ 1</h3>
+         <br>
+
+            <div class="card question">
+               <div class="content testcontent" >
+                  <div class='row'>
+					 <div class="col-md-12 col-xs-12"> <div id="info"></div></div>
+					 
+                     <div class="col-md-12 col-xs-12">
+						<div class="qcont">
+						   
+							<div id="question">Loading your Test!! <br> Please wait. </div>
+						</div>
+						<div class="options">
+							<div class="opts" id="opt"></div>					
+						</div>
+                     </div>
+                  </div>
+				</div>
+				
+				<div class="content confirm">
+					<div class='row'>
+						<div class="col-md-12 col-xs-12"> <br>
+							<p><b>You are about to Submit your test!!</b>	</p>
+							<p>Please ensure all your answers are correct. Once Submitted answers can not be changed.</p>
+							<div id="unattempt"></div>
+						</div>
+						<div class="col-md-2 col-xs-2"> </div>
+						<div class="col-md-4 col-xs-4"> 
+							<button type="button" class="btn btn-success btn-left" onclick="golast1();" >Back</button>
+						</div>
+						<div class="col-md-4 col-xs-4"> 
+							<button type="button" class="btn btn-success btn-right" onclick="submittest();" >Submit</button>
+						</div>
+						<div class="col-md-2 col-xs-2"> </div>
+						<div class="col-md-12 col-xs-12"> <br></div>
+					</div>	
+				</div>
+			</div>
+			
+			
+		 </div>
+		 </div>
+     </div>
+   </body>
+   <script type="text/javascript" src="cordova.js"></script>
+   <script type="text/javascript" src="js/index.js"></script>
+  
+   <script>
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+
+var q_array = [ ["143","If we have a tree of n nodes, how many edges will it have?", ["1","(n*(n-1))/2 ","(n*(n-1))","n-1"]], ["144","Which of the following data structures can handle updates and queries in log(n) time on an array?", ["Linked list","Stack","Segment Tree","Queue"]], ["145", "Of the following data structures, which has a Last in First Out ordering? In other words, the one that came in last will be the first to be popped.", ["Queue", "Stack", "Vector","ArrayList"]] ];
+
+
+createTest(q_array);
+
+
+function createTest(q){
+	var size = q.length;
+	var l = [];
+	// Create array of question ids empty
+	for(var i=0; i < size;i++){
+		l.push([q[i][0],""]);
+	}
+	// Set empty quesiotn ids to local storage. This will initilize all questions are unanswered
+	// at the start of test
+	localStorage._gbtest = JSON.stringify(l);
+	
+	// Now initilize with First question
+	localStorage._gb_qcounter = 0;
+	createQuestion(q,0);
+}
+
+function createQuestion(q,c){
+	
+	var question = "";
+	
+	for(var i=0; i < q.length;i++){
+		if(i==c){
+		    qid = q[i][0];
+			question = q[i][1];
+			opt = q[i][2];
+		}
+	}
+		
+	$("#question").html(question);
+	createOptions(opt,qid);
+	
+	// Now fill up info bar with question counter-increment
+	$("#info").html( "Question " + (Number(c)+1)+" of " + q.length);
+}
+
+function createOptions(o,qid){
+	var txt = "<div class='row'>";
+	
+	for(var i=0;i<o.length;i++){
+		txt += ' <div class="col-md-6 col-xs-6" style="text-align:left;padding-top:10px;">';
+		txt += '<input type="radio" name="opts" id="id_'+qid + '_' + (i+1)+'" value="'+ o[i] +'">';
+		txt += '<label class="optlbl"  >'+ o[i] +'</label>';
+		txt += '</div>';
+	}
+	
+	txt += '</div>';//row end
+	txt += "<div class='row'>";
+	txt += '<div class="col-md-4 col-xs-4">';
+	if(localStorage._gb_qcounter > 0)
+		txt += '<button type="button" class="btn btn-success btn-left" onclick="prevQ();" >Back</button>';
+	txt += '</div>';	
+	txt += '<div class="col-md-2 col-xs-2" style="margin-bottom: 10px;">';
+	if(localStorage._gb_qcounter > 0)
+		txt += '<button id="last" type="button" onclick="gofirst();" class="btn btn-default">&lt;&lt;</button>';
+	txt += '</div>';
+	txt += '<div class="col-md-2 col-xs-2" style="margin-bottom: 10px;"><button id="first" type="button" onclick="golast();" class="btn btn-default">&gt;&gt;</button></div>';
+	txt += '<div class="col-md-4 col-xs-4" style="margin-bottom: 10px;">';
+	txt += '<button type="button" id="back" class="btn btn-success btn-right" onclick="nxtQ();" >Next</button></div>';
+	txt += '</div>';
+	
+	$("#opt").html(txt);
+	
+	// Now fill selected option if user has used back/next
+	var l = JSON.parse(localStorage._gbtest);
+	
+	//if value is set else ignore
+	try{
+		var id = l[localStorage._gb_qcounter][1][1]; //val=[1][0]
+		$("#"+id).prop("checked", true);
+	}catch(err) {}		
+}
+
+function manageLocal(){
+	// Read localstorage forst
+	var l = JSON.parse(localStorage._gbtest);
+	
+	// Save currwnt Answers to local storage
+	var o =$('input[name="opts"]:checked').val();
+	var id =$('input[name="opts"]:checked').attr('id');
+	var l = JSON.parse(localStorage._gbtest);
+	l[localStorage._gb_qcounter][1] = [o,id];
+	localStorage._gbtest = JSON.stringify(l);
+}
+function nxtQ(){
+	manageLocal();
+	// Increment co unter
+	if(q_array.length-1 > localStorage._gb_qcounter){
+		localStorage._gb_qcounter = Number(localStorage._gb_qcounter) +1;
+		
+		// Now show the question	
+		createQuestion(q_array,localStorage._gb_qcounter);	
+	}
+    else
+		showConfirm();
+}
+
+function prevQ(){
+	manageLocal();
+	// Increment co unter
+	if(localStorage._gb_qcounter>0){
+		localStorage._gb_qcounter = Number(localStorage._gb_qcounter) -1;
+		
+		// Now show the question	
+		createQuestion(q_array,localStorage._gb_qcounter);	
+	}	
+}
+function gofirst(){
+	manageLocal();
+	localStorage._gb_qcounter = 0;
+	createQuestion(q_array,0);	
+}
+function golast(){;
+	manageLocal();
+	localStorage._gb_qcounter = q_array.length-1;
+	createQuestion(q_array,q_array.length-1);
+}
+function golast1(){;
+	$('.confirm').hide();
+	$('.testcontent').show();
+	golast();
+}
+function showConfirm(){
+	$('.testcontent').hide();
+	
+	// Change height of question
+	$(".question").attr("min-height","900px");
+	$('.confirm').show();
+	
+	//Now process and show unanswered questions
+	var unattempt = [];
+	var l = JSON.parse(localStorage._gbtest);
+	for(var i=0;i<l.length;i++){
+		//if l[i][1] is an array
+		if(l[i][1].constructor === Array){
+			// It is also not attempted if array is filled with null value
+			if(l[i][1][0] === null)
+				unattempt.push(Number(i)+1);
+		}else
+			unattempt.push(Number(i)+1);
+	}
+	var txt = "Following questions are not attempted. Go Back to attempt them or Submit.<br><br>";
+	
+	for(var j=0;j<unattempt.length;j++){
+		txt += "<div class='remind bg-danger'> Question " + unattempt[j] + "</div>";
+	}
+	$("#unattempt").html(txt);
+	
+}
+function submittest(){
+    var txt = "<h3 style='color:red;'>Result  </h2><br>Congratulations!! You Got : 7/10";
+	txt += "<br><br><a href='./index.html'>Home</a>"
+	$('.confirm').html(txt);
+}
+</script>
+  
+</html>
