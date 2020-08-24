@@ -103,6 +103,9 @@
 			display:none;
 			text-align:center;
 		}
+		.qimg{
+			width:220px;
+		}
       </style>
    </head>
    <body >
@@ -173,7 +176,7 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
-var q_array = [ ["143","If we have a tree of n nodes, how many edges will it have?", ["1","(n*(n-1))/2 ","(n*(n-1))","n-1"]], ["144","Which of the following data structures can handle updates and queries in log(n) time on an array?", ["Linked list","Stack","Segment Tree","Queue"]], ["145", "Of the following data structures, which has a Last in First Out ordering? In other words, the one that came in last will be the first to be popped.", ["Queue", "Stack", "Vector","ArrayList"]] ];
+var q_array = [ ["143","If we have a tree of n nodes, how many edges will it have?", ["1","(n*(n-1))/2 ","(n*(n-1))","n-1"],0], ["144","Which of the following data structures can handle updates and queries in log(n) time on an array?", ["Linked list","Stack","Segment Tree","Queue"],0], ["145", "Of the following data structures, which has a Last in First Out ordering? In other words, the one that came in last will be the first to be popped.", ["Queue", "Stack", "Vector","ArrayList"],1], ["146","When a planet orbits the Sun, one of the foci of the elliptical orbit is <br> <<<test.png>>>",["The axis","The perihelion","The centre","The Sun"],0] ];
 
 
 createTest(q_array);
@@ -198,28 +201,38 @@ function createTest(q){
 function createQuestion(q,c){
 	
 	var question = "";
+	var multi = 0 ; // multiple select question or single choice
 	
 	for(var i=0; i < q.length;i++){
 		if(i==c){
 		    qid = q[i][0];
 			question = q[i][1];
 			opt = q[i][2];
+			if(q[i][3]==1)
+				multi =1;
 		}
 	}
-		
+	// If there are images in question decode them.
+	question = question.replace("<<<test.png>>>","<img class='qimg' src='./img/test.png'>")	 
 	$("#question").html(question);
-	createOptions(opt,qid);
+	
+	createOptions(opt,qid,multi);
 	
 	// Now fill up info bar with question counter-increment
 	$("#info").html( "Question " + (Number(c)+1)+" of " + q.length);
 }
 
-function createOptions(o,qid){
+function createOptions(o,qid,multi){
+    
+	var type = "radio";
+	if(multi == 1)
+		type="checkbox";
+			
 	var txt = "<div class='row'>";
 	
 	for(var i=0;i<o.length;i++){
 		txt += ' <div class="col-md-6 col-xs-6" style="text-align:left;padding-top:10px;">';
-		txt += '<input type="radio" name="opts" id="id_'+qid + '_' + (i+1)+'" value="'+ o[i] +'">';
+		txt += '<input type="'+type+'" name="opts" id="id_'+qid + '_' + (i+1)+'" value="'+ o[i] +'">';
 		txt += '<label class="optlbl"  >'+ o[i] +'</label>';
 		txt += '</div>';
 	}
@@ -248,18 +261,48 @@ function createOptions(o,qid){
 	try{
 		var id = l[localStorage._gb_qcounter][1][1]; //val=[1][0]
 		$("#"+id).prop("checked", true);
+		
+		/**************In case of check box check for 6 options*********************/
+		id = l[localStorage._gb_qcounter][1][3];
+		$("#"+id).prop("checked", true);
+		id = l[localStorage._gb_qcounter][1][5];
+		$("#"+id).prop("checked", true);
+		id = l[localStorage._gb_qcounter][1][7];
+		$("#"+id).prop("checked", true);
+		id = l[localStorage._gb_qcounter][1][9];
+		$("#"+id).prop("checked", true);
+		id = l[localStorage._gb_qcounter][1][11];
+		$("#"+id).prop("checked", true);
+				
 	}catch(err) {}		
 }
 
 function manageLocal(){
 	// Read localstorage forst
 	var l = JSON.parse(localStorage._gbtest);
+		
+	// If Radio button
+	if($('input[name="opts"]').prop("type") == "radio"){
+		// Save currwnt Answers to local storage
+		var o =$('input[name="opts"]:checked').val();
+		var id =$('input[name="opts"]:checked').attr('id');
+		l[localStorage._gb_qcounter][1] = [o,id];
+	}
+	else // if check box is there
+	{
+		var sel =$('input[type="checkbox"]') // get all checkboxes
+               .filter(':checked')  // get only checked
+               .toArray()  // convert jQuery collection to array
+               .reduce(function(acc, val) {        
+                  acc.push(val.value);
+				  acc.push( val.id );
+                  return acc;
+               }, [])
+               ;
+			   
+		l[localStorage._gb_qcounter][1] = sel;
+	}
 	
-	// Save currwnt Answers to local storage
-	var o =$('input[name="opts"]:checked').val();
-	var id =$('input[name="opts"]:checked').attr('id');
-	var l = JSON.parse(localStorage._gbtest);
-	l[localStorage._gb_qcounter][1] = [o,id];
 	localStorage._gbtest = JSON.stringify(l);
 }
 function nxtQ(){
