@@ -55,17 +55,9 @@ body {
   text-align:center;
 }
 .fixedH {
-	height : 120px;
+	height : 150px;
 }
-.casa {
-	background-color:#F4B350;
-	//background-color:#013243;
-	color:white;	
-}
-.bgred {
-	background-color:#E9D460;
-	color:white;
-}
+
 .seablue {
 	background-color:#FDE3A7;
 	color:black;
@@ -80,10 +72,6 @@ a {
 .navbar-custom{
 	background-color: #34495E;
 }
-
-a{
-	color:white
-}
 .icon-bar{
 	background-color:white;
 }
@@ -97,13 +85,46 @@ a{
     text-align: center;
 	text-transform:none;
 }
-.badge-notify{
-   background:#d2527f;
-   position:relative;
-   top: -105px;
-   left: 65px;
-   font-size:12px;
-	font-family: 'open_sans','Open Sans',sans-serif;
+.title {
+  color: grey;
+  font-size: 12px;
+  margin:0px;
+}
+.sideinfo {
+  color: grey;
+  font-size: 12px;
+  
+  color:crimson;
+}
+.bts {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #34495E;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 2px;
+  
+  
+}
+.testcard{
+	border:1px solid #34495E;
+	border-radius: 5px;
+	max-width:130px;
+	text-align:center;
+}
+@media  (min-width: 600px) {
+	.testcard{
+		width:50%;
+    }	
+}	
+.card {
+	margin: auto;
+	text-align: center;
 }
 </style>
     <title>GreyBox School</title>
@@ -114,11 +135,11 @@ a{
 <nav class="navbar navbar-custom">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      <p type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span> 
-      </button>
+      </p>
       <a class="navbar-brand" style="font-size: 12px;" href="dashboard.html">GreyBox</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
@@ -134,31 +155,42 @@ a{
   </div>
 </nav>
 <div class="container">
-    <div class="row">
+    <div class="row" id="tstlist">
 	
-        <div class="col-xs-6 slimL fixedH " >
+        <div class="col-md-3 col-xs-6 slimL  " >
+			
+			<div class="card testcard fixedH">
+			<p><button type="button" class="bts" onclick="chkstart()">Start</button></p>
+			<h6><b>Data Structure new</b></h6>
+			<p class="title">Intro Test - Semester3</p>
+			<p class="sideinfo">Duration : 1Hr</p>
+			
+		</div>
+			
+		</div>
+		
+		 <div class="col-md-3 col-xs-6 slimR " id="discussion">
+			
+			<div class="card testcard fixedH">
+				<p><button type="button" class="bts" onclick="chkstart()">Start</button></p>
+				<h6><b>Physics Advanced</b></h6>
+				<p class="title">Part I,II and III</p>
+				<p class="sideinfo">Duration : 1Hr</p>
+				
+			</div>
+			
+		</div>
+	</div> <!-----row ends	---->
+	<div class="row tstmsg" style="display:none">
+		<div class="col-md-6 col-xs-12" style="text-align:center;">
+			<div id="tstmsg"></div>
+			<button  class="btn btn-info">Back</button>
 			<a href="./loadtest.html">
-			<div class="panel panel-primary slim spray"><br>
-				<i id='users' class="fa fa-3x fa-user"></i>
-				<h6>Pratice Test</h6>
-				<p></p>
-			</div>	
+			<button type="button" class="btn btn-success">Start Test</button>
 			</a>
 		</div>
+	</div>	
 		
-		 <div class="col-xs-6 slimR fixedH" id="discussion">
-			<a href="./testlist.html">
-			<div class="panel panel-primary slim spray"><br>
-				<i id='users' class="fa fa-3x fa-comment"></i>
-				<h6>Available Test</h6>
-				<p></p>
-			</div>	
-			</a>
-		</div>
-		
-		
-		
-	</div>
 	<div class="footer">
   <p>powered by <b style="color:#E87E04;">GreyBox Software</b></p>
 </div>
@@ -167,44 +199,21 @@ a{
 </body>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" src="js/dataTbl.js"></script>
 
-<script async defer type="text/javascript">
-app.initialize();
-// Wait for device API libraries to load
-   document.addEventListener("deviceready", onDeviceReady, false);
-   function onDeviceReady() {
-        // Register the event listener
-        document.addEventListener("backbutton", onBackKeyDown, false);
-    }
-	function onBackKeyDown() {
-		// Do not do any thing when back button is pressed. Override back button behaive
-		//When a user presses back button deom dashboard it should not go to logged out page.
-    }
+<script type="text/javascript">
 
 
-newMsg();
 
-function newMsg(){
-	var c_arr = localStorage["cid_arr"].split(",");
-	var cid = localStorage["cid"];
-	for(var i=0;i<c_arr.length;i++){
-		if(c_arr[i]==cid)
-			document.getElementById("discussion").innerHTML += '<span class="badge badge-notify">New</span>'; 
-	}
-	
+function chkstart(){
+    var txt = "<img src='./img/exam.jpeg' style='width:80px;'></img><br><br>";
+    txt += "<h4>Data Structure new</h4>";
+	txt += "<p class='sideinfo'></p>";
+	txt += "<br><p>You are about to start your test. Onc started test will be locked.</p>";
+	$('#tstmsg').html(txt);
+	$('#tstlist').hide();
+	$('.tstmsg').show();
 }
-
-function logout(){
-	localStorage['sid']='';
-	document.location='index.html'
-	localStorage["cid"] = "";
-	localStorage["db"] = "";
-	localStorage.clear();
-}
- function switchclass(){
-	document.location='resolveCID.html?cid=' + localStorage["cidlist"];	
- }
+ 
 </script>
 
 </html>

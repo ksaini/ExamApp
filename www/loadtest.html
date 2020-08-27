@@ -32,12 +32,16 @@
 				padding-left: 10px;
 			}
 			.navbar {
-				margin-bottom:20px;
+				margin-bottom:0px;
 			}
 		}
         .navbar-inverse{
 			background-color:#34495E;
 			color:white;
+		}
+		.h3 {
+			margin-top:0px;
+			margin-bottom:0px;
 		}
 		.main-panel {
 			background-color: #e7eeef ;
@@ -51,10 +55,8 @@
 			font-family: 'open_sans','Open Sans',sans-serif;
 		}
 		.question {
-			
-			margin-top:10px;
 			padding-left:5px;
-			padding-top:20px;
+			padding-top:10px;
 			background-color: #fff;
 			min-height:200px;
 			box-shadow: 0 6px 16px 0 rgba(0,0,0,.2);			
@@ -106,6 +108,15 @@
 		.qimg{
 			width:220px;
 		}
+		.timer {
+			display:none;
+			margin-top:-10px;
+			margin-bottom:10px;
+			font-family: 'open_sans','Open Sans',sans-serif;
+			font-size: 12px;
+			letter-spacing: 1.1px;
+			
+		}
       </style>
    </head>
    <body >
@@ -127,6 +138,7 @@
             <div class="card question">
                <div class="content testcontent" >
                   <div class='row'>
+					 <div class="col-md-12 col-xs-12 timer"> <div id="timer"></div></div>
 					 <div class="col-md-12 col-xs-12"> <div id="info"></div></div>
 					 
                      <div class="col-md-12 col-xs-12">
@@ -168,7 +180,20 @@
    </body>
    <script type="text/javascript" src="cordova.js"></script>
    <script type="text/javascript" src="js/index.js"></script>
-  
+   <script>
+	app.initialize();
+// Wait for device API libraries to load
+   document.addEventListener("deviceready", onDeviceReady, false);
+   function onDeviceReady() {
+        // Register the event listener
+        document.addEventListener("backbutton", onBackKeyDown, false);
+    }
+	function onBackKeyDown() {
+		// Do not do any thing when back button is pressed. Override back button behaive
+		//When a user presses back button deom dashboard it should not go to logged out page.
+    }
+
+   </script>
    <script>
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
@@ -176,11 +201,23 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
+var config = {"showTimer": "1", "tot_time":"6"};
+
 var q_array = [ ["143","If we have a tree of n nodes, how many edges will it have?", ["1","(n*(n-1))/2 ","(n*(n-1))","n-1"],0], ["144","Which of the following data structures can handle updates and queries in log(n) time on an array?", ["Linked list","Stack","Segment Tree","Queue"],0], ["145", "Of the following data structures, which has a Last in First Out ordering? In other words, the one that came in last will be the first to be popped.", ["Queue", "Stack", "Vector","ArrayList"],1], ["146","When a planet orbits the Sun, one of the foci of the elliptical orbit is <br> <<<test.png>>>",["The axis","The perihelion","The centre","The Sun"],0] ];
 
 
+prepareTestConfig();
 createTest(q_array);
 
+function prepareTestConfig(){
+	
+	// Show timer
+	if(config.hasOwnProperty('showTimer')){
+		if(config.showTimer == "1"){
+			showCounter(config.tot_time);
+		}	
+	}
+}
 
 function createTest(q){
 	var size = q.length;
@@ -367,13 +404,47 @@ function showConfirm(){
 	for(var j=0;j<unattempt.length;j++){
 		txt += "<div class='remind bg-danger'> Question " + unattempt[j] + "</div>";
 	}
-	$("#unattempt").html(txt);
+	if(unattempt.length > 0)
+		$("#unattempt").html(txt);
 	
 }
 function submittest(){
     var txt = "<h3 style='color:red;'>Result  </h2><br>Congratulations!! You Got : 7/10";
 	txt += "<br><br><a href='./index.html'>Home</a>"
 	$('.confirm').html(txt);
+}
+function showCounter(t){
+	$('.timer').show();
+	var start = new Date();
+	var end = new Date(start.getTime() + Number(t)*60000).getTime();
+	var x = setInterval(function() {
+		
+		var now = new Date().getTime();
+		// Find the distance between now and the count down date
+		var distance = end - now;
+
+		// Time calculations for days, hours, minutes and seconds
+		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+		if(hours > 0)
+			document.getElementById("timer").innerHTML = "Time Left <b>" + hours + "h : "
+		+ minutes + "m</b>";
+		else{
+//			if(distance > 300000) // show only minutes
+	//			document.getElementById("timer").innerHTML = "Time Left <b style='color:crimson'>" +  minutes + "m</b>" ;
+		//	else
+				document.getElementById("timer").innerHTML = "Time Left <b style='color:crimson'>" +  minutes + "m : " + seconds + "s</b>";
+		}
+		
+			document.getElementById("timer").innerHTML += " ("+t+"m)";	
+		// If the count down is finished, write some text
+		if (distance < 0) {
+			clearInterval(x);
+			submittest();
+		}
+	}, 1000);
 }
 </script>
   
